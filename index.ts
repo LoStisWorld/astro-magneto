@@ -1,0 +1,1 @@
+export { default as Magneto } from './src/Magneto.astro';

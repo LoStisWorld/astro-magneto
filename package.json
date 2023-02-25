@@ -1,0 +1,31 @@
+{
+  "name": "astro-magneto",
+  "version": "1.0.0",
+  "description": "This component will",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "index.ts",
+    "./src/Magneto.astro",
+    "./src/Magneto.ts"
+  ],
+  "homepage": "https://github.com/LoStisWorld/astro-magneto#readme",
+  "bugs": {
+    "url": "https://github.com/LoStisWorld/astro-magneto/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoStisWorld/astro-magneto.git"
+  },
+  "peerDependencies": {
+    "astro": "^2.0.10"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["magneto", "astro-component", "ui"],
+  "author": "LoSti's World",
+  "license": "MIT"
+}

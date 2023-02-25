@@ -1,0 +1,17 @@
+---
+import { Magneto } from "./Magneto";
+
+interface Props {
+  class?: string;
+}
+
+const { class: classes } = Astro.props as Props;
+---
+
+<div class:list={['lw-magneto', classes]}>
+  <slot/>
+</div>
+
+<script>
+  
+</script>
