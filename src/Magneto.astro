@@ -1,61 +1,66 @@
 ---
 interface Props {
-  class?: string;
-  triggerArea?: number;
+	class?: string;
+	triggerArea?: number;
 
-  transition?: {
-    timing?: string;
-  }
+	transition?: {
+		duration: string;
+		timing?:
+			| 'linear'
+			| 'ease'
+			| 'ease-in'
+			| 'ease-out'
+			| 'ease-in-out'
+			| string;
+		delay?: string;
+	};
 }
 
-const { 
-  class: classes, 
-  triggerArea = 200,
-  transition
-} = Astro.props as Props
+const { class: classes, triggerArea = 200, transition } = Astro.props as Props;
 
-const { 
-  timing = '250ms'
-} = transition || {}
+const {
+	duration = '250ms',
+	timing = 'linear',
+	delay = '0s',
+} = transition || {};
 ---
 
-<div 
-  class:list={['lw-magneto', classes]} 
-  style={`--timing:${timing};`} 
-  data-trigger-area-distance={triggerArea}
->
-  <slot/>
+<div
+	class:list={['lw-magneto', classes]}
+	data-trigger-area-distance={triggerArea}>
+	<slot />
 </div>
 
 <script>
-  import { Magneto } from "./Magneto";
+	import { Magneto } from './Magneto';
 
-  if (window.matchMedia('(prefers-reduced-motion: no-preference)')) {
-    // Get all magneto elements
-    const magnetoList: NodeListOf<HTMLElement> = document.querySelectorAll('.lw-magneto');
-    // Call Magneto class
-    magnetoList.forEach(item => {
-      const getTriggerArea: number = +item.dataset.triggerAreaDistance;
-      console.log(getTriggerArea);
-      new Magneto(item, getTriggerArea);
-    });
-  }
+	if (window.matchMedia('(prefers-reduced-motion: no-preference)')) {
+		// Get all magneto elements
+		const magnetoList: NodeListOf<HTMLElement> =
+			document.querySelectorAll('.lw-magneto');
+		// Call Magneto class
+		magnetoList.forEach((item) => {
+			const getTriggerArea: number = +item.dataset.triggerAreaDistance;
+			console.log(getTriggerArea);
+			new Magneto(item, getTriggerArea);
+		});
+	}
 </script>
 
-<style>
-  div { 
-    --posX: 0; 
-    --posY: 0;
-    border: 2px solid red; 
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    /*translate3d(tx, ty, tz)*/
-    div {
-      transform: translate3D(0, 0, 0);
-      transition: all var(--timing);
-    }
-    div.active {
-      transform: translate3D(var(--posX), var(--posY), 0);
-    }
-  }
+<style define:vars={{ timing, duration, delay }}>
+	div {
+		--posX: 0;
+		--posY: 0;
+		border: 2px solid red;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		/*translate3d(tx, ty, tz)*/
+		div {
+			transform: translate3D(0, 0, 0);
+			transition: all var(--duration) var(--timing) var(--delay);
+		}
+		div.active {
+			transform: translate3D(var(--posX), var(--posY), 0);
+		}
+	}
 </style>
