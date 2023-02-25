@@ -5,18 +5,16 @@ interface Props {
 
 	transition?: {
 		duration: string;
-		timing?:
-			| 'linear'
-			| 'ease'
-			| 'ease-in'
-			| 'ease-out'
-			| 'ease-in-out'
-			| string;
+		timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | string;
 		delay?: string;
 	};
 }
 
-const { class: classes, triggerArea = 200, transition } = Astro.props as Props;
+const { 
+	class: classes, 
+	triggerArea = 200, 
+	transition 
+} = Astro.props as Props;
 
 const {
 	duration = '250ms',
@@ -36,18 +34,13 @@ const {
 
 	if (window.matchMedia('(prefers-reduced-motion: no-preference)')) {
 		// Get all magneto elements
-		const magnetoList: NodeListOf<HTMLElement> =
-			document.querySelectorAll('.lw-magneto');
+		const magnetoList: NodeListOf<HTMLElement> = document.querySelectorAll('.lw-magneto');
 		// Call Magneto class
-		magnetoList.forEach((item) => {
-			const getTriggerArea: number = +item.dataset.triggerAreaDistance;
-			console.log(getTriggerArea);
-			new Magneto(item, getTriggerArea);
-		});
+		magnetoList.forEach((item) => new Magneto(item, 0.5));
 	}
 </script>
 
-<style define:vars={{ timing, duration, delay }}>
+<style define:vars={{ timing, duration, delay, triggerArea }}>
 	div {
 		--posX: 0;
 		--posY: 0;
