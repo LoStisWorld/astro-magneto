@@ -1,17 +1,25 @@
 ---
-import { Magneto } from "./Magneto";
-
 interface Props {
   class?: string;
+  distance?: number;
 }
 
-const { class: classes } = Astro.props as Props;
+const { class: classes, distance = 200 } = Astro.props as Props;
 ---
 
-<div class:list={['lw-magneto', classes]}>
+<div class:list={['lw-magneto', classes]} style="border:2px solid red" data-distance={distance}>
   <slot/>
 </div>
 
 <script>
+  import { Magneto } from "./Magneto";
+
+  // Get all magneto elements
+  const magnetoList: NodeListOf<HTMLElement> = document.querySelectorAll('.lw-magneto');
   
+  // Call Magneto class
+  magnetoList.forEach(item => {
+    const getDistance: number = +item.dataset.distance;
+    new Magneto(item, getDistance)
+  });
 </script>
