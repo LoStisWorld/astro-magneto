@@ -2,18 +2,10 @@
 interface Props extends astroHTML.JSX.HTMLAttributes {
 	class?: string;
 	triggerArea?: number;
-	movementArea?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
-	tag?: string;
-
+	movementRatio?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
 	transition?: {
 		duration: string;
-		timing?:
-			| 'linear'
-			| 'ease'
-			| 'ease-in'
-			| 'ease-out'
-			| 'ease-in-out'
-			| string;
+		timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | string;
 		delay?: string;
 	};
 }
@@ -22,45 +14,41 @@ const {
 	class: classes,
 	triggerArea = 100,
 	transition,
-	tag: Tag = 'div',
+	movementRatio = 0.5,
+	...props
 } = Astro.props as Props;
 
 const {
-	duration = '250ms',
+	duration = '150ms',
 	timing = 'linear',
 	delay = '0s',
 } = transition || {};
 ---
 
-<Tag
-	class:list={['lw-magneto', classes]}
-	data-trigger-area-distance={triggerArea}>
+<div class:list={['lw-magneto', classes]} {...props}>
 	<slot />
-</Tag>
+</div>
 
 <script>
 	import { Magneto } from './Magneto';
 
 	if (window.matchMedia('(prefers-reduced-motion: no-preference)')) {
 		// Get all magneto elements
-		const magnetoList: NodeListOf<HTMLElement> =
-			document.querySelectorAll('.lw-magneto');
+		const magnetoList: NodeListOf<HTMLElement> = document.querySelectorAll('.lw-magneto');
 		// Call Magneto class
-		magnetoList.forEach((item) => new Magneto(item, 0.5));
+		magnetoList.forEach((item) => new Magneto(item));
 	}
 </script>
 
-<style define:vars={{ timing, duration, delay, triggerArea }}>
+<style define:vars={{ timing, duration, delay, triggerArea, movementRatio }}>
 	.lw-magneto {
 		--posX: 0;
 		--posY: 0;
-		border: 2px solid red;
 	}
 	@media (prefers-reduced-motion: no-preference) {
-		/*translate3d(tx, ty, tz)*/
 		.lw-magneto {
 			transform: translate3D(0, 0, 0);
-			transition: all var(--duration) var(--timing) var(--delay);
+			transition: transform var(--duration) var(--timing) var(--delay);
 		}
 		.lw-magneto.active {
 			transform: translate3D(var(--posX), var(--posY), 0);
