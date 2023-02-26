@@ -1,19 +1,28 @@
 ---
-interface Props {
+interface Props extends astroHTML.JSX.HTMLAttributes {
 	class?: string;
 	triggerArea?: number;
+	movementArea?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+	tag?: string;
 
 	transition?: {
 		duration: string;
-		timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | string;
+		timing?:
+			| 'linear'
+			| 'ease'
+			| 'ease-in'
+			| 'ease-out'
+			| 'ease-in-out'
+			| string;
 		delay?: string;
 	};
 }
 
-const { 
-	class: classes, 
-	triggerArea = 200, 
-	transition 
+const {
+	class: classes,
+	triggerArea = 100,
+	transition,
+	tag: Tag = 'div',
 } = Astro.props as Props;
 
 const {
@@ -23,36 +32,37 @@ const {
 } = transition || {};
 ---
 
-<div
+<Tag
 	class:list={['lw-magneto', classes]}
 	data-trigger-area-distance={triggerArea}>
 	<slot />
-</div>
+</Tag>
 
 <script>
 	import { Magneto } from './Magneto';
 
 	if (window.matchMedia('(prefers-reduced-motion: no-preference)')) {
 		// Get all magneto elements
-		const magnetoList: NodeListOf<HTMLElement> = document.querySelectorAll('.lw-magneto');
+		const magnetoList: NodeListOf<HTMLElement> =
+			document.querySelectorAll('.lw-magneto');
 		// Call Magneto class
 		magnetoList.forEach((item) => new Magneto(item, 0.5));
 	}
 </script>
 
 <style define:vars={{ timing, duration, delay, triggerArea }}>
-	div {
+	.lw-magneto {
 		--posX: 0;
 		--posY: 0;
 		border: 2px solid red;
 	}
 	@media (prefers-reduced-motion: no-preference) {
 		/*translate3d(tx, ty, tz)*/
-		div {
+		.lw-magneto {
 			transform: translate3D(0, 0, 0);
 			transition: all var(--duration) var(--timing) var(--delay);
 		}
-		div.active {
+		.lw-magneto.active {
 			transform: translate3D(var(--posX), var(--posY), 0);
 		}
 	}

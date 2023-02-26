@@ -16,6 +16,8 @@ export class Magneto {
     this.movementRatio = movementRatio;
     this.observer();
     this.onResize();
+
+    console.dir(this.domEl)
   }
 
   observer() {
@@ -45,21 +47,25 @@ export class Magneto {
   }
 
   onMouseMove(e: MouseEvent) {
-    const getMousePosToCenterElX = this.domElRect.left + this.domElRect.width;
-    const getMousePosToCenterElY = this.domElRect.top + this.domElRect.height;
-    const getElementTriggerAreaX = Math.round(e.pageX - getMousePosToCenterElX);
-    const getElementTriggerAreaY = Math.round(e.pageY - getMousePosToCenterElY);
-    
-    if (Math.abs(getElementTriggerAreaX) < this.triggerArea || Math.abs(getElementTriggerAreaY) < this.triggerArea) {
-      const movementArea = this.movementRatio * this.triggerArea;
-      console.log({getElementTriggerAreaX, getElementTriggerAreaY});
-      // console.log({getMousePosToCenterElX});
-      // this.setElementPos({ x: deltaX, y: deltaY});
-    } else {
-      // this.setElementPos({ x: 0, y: 0 });
-    }
+    const getTriggerArea = this.calcTriggerArea(e.clientX, e.clientY);
+    console.log({ e, getTriggerArea });
   }
-  
+
+  calcTriggerArea(mouseX: number, mouseY: number): boolean {
+    // Calculate the area around the element
+    const areaWidth = this.domEl.offsetWidth + this.triggerArea;
+    const areaHeight = this.domEl.offsetHeight + this.triggerArea;
+
+    const isInArea = (
+      mouseX >= this.domElRect.left - areaWidth &&
+      mouseX <= this.domElRect.right + areaWidth &&
+      mouseY >= this.domElRect.top + areaHeight &&
+      mouseY <= this.domElRect.bottom + areaHeight
+    );
+
+    return isInArea;
+  }
+
   setElementPos(deltaPos: { x: number; y: number }) {
     this.posX = deltaPos.x;
     this.posY = deltaPos.y;
@@ -95,7 +101,7 @@ export class Magneto {
 //     this.posX = 0;
 //     this.posY = 0;
 //     this.observer();
-//     this.onResize();    
+//     this.onResize();
 //   }
 
 //   observer() {
@@ -132,7 +138,7 @@ export class Magneto {
 
 //     (getMousePosToCenterElX < this.triggerArea || getMousePosToCenterElY < this.triggerArea)
 //       ? this.setElementPos(mousePos)
-//       : this.setElementPos({ x: 0, y: 0 }); 
+//       : this.setElementPos({ x: 0, y: 0 });
 //   }
 
 //   setElementPos(mousePos: { x: number; y: number }) {
