@@ -27,7 +27,6 @@ export class Magneto {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         entry.isIntersecting ? this.startMouseTracker() : this.stopMouseTracker();
-        this.domEl.classList.toggle('active', entry.isIntersecting);
       });
     }, options);
     observer.observe(this.domEl);
@@ -44,25 +43,25 @@ export class Magneto {
   }
 
   onMouseMove(e: MouseEvent) {
+    // Update element position
     this.domElRect = this.domEl.getBoundingClientRect();
+    // Check if mouse cursor is inside triggerArea
     const checkTriggerArea = this.calcTriggerArea(e.clientX, e.clientY);
-
+    // Toggle element class if mouse cursor is inside triggerArea
+    this.domEl.classList.toggle('active', checkTriggerArea);
+    // Reset element position if mouse cursor is no longer inside triggerArea
     if (!checkTriggerArea) {
       this.stopMouseTracker();
       return
     }
-
-    const movementArea = this.triggerArea * this.movementRatio;
-    const getMousePosToCenterElX = Math.round(
-      e.clientX - (this.domElRect.left + this.domEl.clientWidth / 2)
-    );
-    const getMousePosToCenterElY = Math.round(e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2));
-
-    // this.posX = movementRatioX;
-    // this.posY = movementRatioY;
-    console.log(getMousePosToCenterElX);
-    // console.log(this.posX, this.posY, movementArea);
+    // Calculating element position on mouse cursor
+    const dX = Math.round(e.clientX - (this.domElRect.left + this.domEl.offsetWidth / 2));
+    const dY = Math.round(e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2)) * this.movementRatio;
+    this.posX = dX
+    this.posY = dY;
+    console.log((dX * this.domEl.offsetWidth / 2) * this.movementRatio);
     
+    // Set element to mouse cursor position
     // this.setElementPos();
   }
 
@@ -79,8 +78,8 @@ export class Magneto {
   }
 
   setElementPos() {
-    this.domEl.style.setProperty('--posX', `${this.posX}%`);
-    this.domEl.style.setProperty('--posY', `${this.posY}%`);
+    this.domEl.style.setProperty('--posX', `${this.posX}px`);
+    this.domEl.style.setProperty('--posY', `${this.posY}px`);
   }
 
   onResize() {

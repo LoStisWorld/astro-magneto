@@ -2,7 +2,7 @@
 interface Props extends astroHTML.JSX.HTMLAttributes {
 	class?: string;
 	triggerArea?: number;
-	movementRatio?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8 | 0.9 | 1;
+	movementRatio?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8;
 	transition?: {
 		duration: string;
 		timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | string;
@@ -19,8 +19,8 @@ const {
 } = Astro.props as Props;
 
 const {
-	duration = '150ms',
-	timing = 'linear',
+	duration = '250ms',
+	timing = 'ease',
 	delay = '0s',
 } = transition || {};
 ---
@@ -51,6 +51,7 @@ const {
 			transition: transform var(--duration) var(--timing) var(--delay);
 		}
 		.lw-magneto.active {
+			transition: none;
 			transform: translate3D(var(--posX), var(--posY), 0);
 		}
 	}
