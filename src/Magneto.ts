@@ -52,21 +52,18 @@ export class Magneto {
       return
     }
 
-    const getMousePosToCenterElX = e.clientX - (this.domElRect.left + this.domEl.offsetWidth / 2);
-    const getMousePosToCenterElY = e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2);
     const movementArea = this.triggerArea * this.movementRatio;
-    const movementRatioX = Math.round((getMousePosToCenterElX / this.triggerArea) * movementArea);
-    // const movementRatioY = (getMousePosToCenterElY / movementArea) * this.triggerArea;
+    const getMousePosToCenterElX = Math.round(
+      e.clientX - (this.domElRect.left + this.domEl.clientWidth / 2)
+    );
+    const getMousePosToCenterElY = Math.round(e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2));
 
-    // this.posX = Math.min(Math.max(movementRatioX, -this.triggerArea), this.triggerArea);
-    // this.posY = Math.min(Math.max(movementRatioY, -this.triggerArea), this.triggerArea);
-
-    this.posX = movementRatioX;
-    this.posY = getMousePosToCenterElY / movementArea;
-    console.log(movementRatioX);
+    // this.posX = movementRatioX;
+    // this.posY = movementRatioY;
+    console.log(getMousePosToCenterElX);
     // console.log(this.posX, this.posY, movementArea);
     
-    this.setElementPos();
+    // this.setElementPos();
   }
 
   calcTriggerArea(mouseX: number, mouseY: number) {
@@ -79,10 +76,6 @@ export class Magneto {
     );
 
     return isInArea;
-  }
-
-  clamp(value: number, min: number, max: number) {
-    return Math.min(Math.max(value, min), max);
   }
 
   setElementPos() {
