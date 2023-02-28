@@ -1,5 +1,5 @@
 export class Magneto {
-  private readonly triggerArea: number;
+  private triggerArea: number;
   private readonly domEl: HTMLElement;
   private domElRect: DOMRect;
   private posX: number;
@@ -33,6 +33,7 @@ export class Magneto {
   }
 
   startMouseTracker() {
+    this.checkTriggerArea();
     window.addEventListener('mousemove', this.onMouseMove);
   }
 
@@ -55,17 +56,17 @@ export class Magneto {
       return
     }
     // Calculating element position on mouse cursor
-    const dX = Math.round(e.clientX - (this.domElRect.left + this.domEl.offsetWidth / 2));
+    const dX = Math.round(e.clientX - (this.domElRect.left + this.domEl.offsetWidth / 2)) * this.movementRatio;
     const dY = Math.round(e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2)) * this.movementRatio;
     this.posX = dX
     this.posY = dY;
-    console.log((dX * this.domEl.offsetWidth / 2) * this.movementRatio);
-    
+    // console.log((dX * this.domEl.offsetWidth / 2) * this.movementRatio);
+
     // Set element to mouse cursor position
     // this.setElementPos();
   }
 
-  calcTriggerArea(mouseX: number, mouseY: number) {
+  calcTriggerArea(mouseX: number, mouseY: number): boolean {
     // Check if the mouse cursor is within the triggerArea around the element
     const isInArea = (
       mouseX >= this.domElRect.left - this.triggerArea &&
@@ -82,8 +83,19 @@ export class Magneto {
     this.domEl.style.setProperty('--posY', `${this.posY}px`);
   }
 
+  checkTriggerArea() {
+    if ((this.domEl.offsetWidth + this.triggerArea * 2) > innerWidth) {
+      this.triggerArea = innerWidth - (this.domEl.offsetWidth + this.triggerArea * 2);
+    }
+
+    if ((this.domEl.offsetHeight + this.triggerArea * 2) > innerHeight) {
+      this.triggerArea = innerHeight - (this.domEl.offsetHeight + this.triggerArea * 2);
+    }
+  }
+
   onResize() {
     window.addEventListener('resize', () => {
+      this.checkTriggerArea();
       this.domElRect = this.domEl.getBoundingClientRect();
     });
   }
