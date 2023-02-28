@@ -1,7 +1,7 @@
 {
   "name": "astro-magneto",
   "version": "1.0.0",
-  "description": "This component will",
+  "description": "Let an element follow the mouse cursor with a graceful and smooth motion.",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -20,7 +20,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["magneto", "astro-component", "ui"],
+  "keywords": ["magneto", "astro-component", "ui", "movement"],
   "author": "LoSti's World",
   "license": "MIT"
 }
