@@ -1,10 +1,12 @@
 export class Magneto {
-  private triggerArea: number;
-  private readonly domEl: HTMLElement;
-  private domElRect: DOMRect;
-  private posX: number;
-  private posY: number;
-  private movementRatio: number;
+  triggerArea: number;
+  domEl: HTMLElement;
+  rootmargin: string;
+  domElRect: DOMRect;
+  posX: number;
+  posY: number;
+  movementRatio: number;
+  threshold: number | undefined;
 
   constructor(domEl: HTMLElement) {
     this.domEl = domEl;
@@ -12,6 +14,8 @@ export class Magneto {
     this.triggerArea = +getComputedStyle(this.domEl).getPropertyValue('--triggerArea');
     this.movementRatio = +getComputedStyle(this.domEl).getPropertyValue('--movementRatio');
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.rootmargin = `${this.domEl.dataset.rootmargin}`;
+    this.threshold = this.domEl.dataset.threshold ? +this.domEl.dataset.threshold : 0.5;
     this.posX = 0;
     this.posY = 0;
     this.observer();
@@ -20,8 +24,8 @@ export class Magneto {
 
   observer() {
     const options = {
-      rootMargin: '0px',
-      threshold: 0.5,
+      rootMargin: this.rootmargin,
+      threshold: this.threshold,
     };
 
     const observer = new IntersectionObserver(entries => {
@@ -56,14 +60,15 @@ export class Magneto {
       return
     }
     // Calculating element position on mouse cursor
+    const movementArea = this.triggerArea * this.movementRatio;
     const dX = Math.round(e.clientX - (this.domElRect.left + this.domEl.offsetWidth / 2)) * this.movementRatio;
     const dY = Math.round(e.clientY - (this.domElRect.top + this.domEl.offsetHeight / 2)) * this.movementRatio;
-    this.posX = dX
-    this.posY = dY;
-    // console.log((dX * this.domEl.offsetWidth / 2) * this.movementRatio);
+
+    this.posX = Math.round(dX > movementArea ? movementArea : dX < -movementArea ? -movementArea : dX);
+    this.posY = Math.round(dY > movementArea ? movementArea : dY < -movementArea ? -movementArea : dY);
 
     // Set element to mouse cursor position
-    // this.setElementPos();
+    this.setElementPos();
   }
 
   calcTriggerArea(mouseX: number, mouseY: number): boolean {
@@ -85,11 +90,11 @@ export class Magneto {
 
   checkTriggerArea() {
     if ((this.domEl.offsetWidth + this.triggerArea * 2) > innerWidth) {
-      this.triggerArea = innerWidth - (this.domEl.offsetWidth + this.triggerArea * 2);
+      this.triggerArea = (innerWidth - this.domEl.offsetWidth) / 2;
     }
 
     if ((this.domEl.offsetHeight + this.triggerArea * 2) > innerHeight) {
-      this.triggerArea = innerHeight - (this.domEl.offsetHeight + this.triggerArea * 2);
+      this.triggerArea = (innerHeight - this.domEl.offsetHeight) / 2;
     }
   }
 

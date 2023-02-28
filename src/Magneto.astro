@@ -1,8 +1,12 @@
 ---
 interface Props extends astroHTML.JSX.HTMLAttributes {
 	class?: string;
-	triggerArea?: number;
-	movementRatio?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8;
+	options?: {
+		triggerArea?: number;
+		movementRatio?: 0.1 | 0.2 | 0.3 | 0.4 | 0.5 | 0.6 | 0.7 | 0.8;
+		rootMargin?: string;
+		threshold?: number;
+	}
 	transition?: {
 		duration: string;
 		timing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | string;
@@ -12,11 +16,17 @@ interface Props extends astroHTML.JSX.HTMLAttributes {
 
 const {
 	class: classes,
-	triggerArea = 100,
-	movementRatio = 0.5,
+	options,
 	transition,
 	...props
 } = Astro.props as Props;
+
+const {
+	triggerArea = 100,
+	movementRatio = 0.5,
+	threshold = 0.5,
+	rootMargin = '0px'
+} = options || {};
 
 const {
 	duration = '250ms',
@@ -25,7 +35,12 @@ const {
 } = transition || {};
 ---
 
-<div class:list={['lw-magneto', classes]} {...props}>
+<div 
+	class:list={['lw-magneto', classes]} 
+	data-threshold={threshold} 
+	data-rootmargin={rootMargin}
+	{...props}
+>
 	<slot />
 </div>
 
@@ -47,11 +62,16 @@ const {
 	}
 	@media (prefers-reduced-motion: no-preference) {
 		.lw-magneto {
+			-webkit-transform: translate3D(0, 0, 0);
 			transform: translate3D(0, 0, 0);
+			transition: -webkit-transform var(--duration) var(--timing) var(--delay);
 			transition: transform var(--duration) var(--timing) var(--delay);
+			transition: transform var(--duration) var(--timing) var(--delay), -webkit-transform var(--duration) var(--timing) var(--delay);
 		}
 		.lw-magneto.active {
+			-webkit-transition: none;
 			transition: none;
+			-webkit-transform: translate3D(var(--posX), var(--posY), 0);
 			transform: translate3D(var(--posX), var(--posY), 0);
 		}
 	}
