@@ -4,6 +4,8 @@
 # Astro Magneto
 Let an element follow the mouse cursor with a graceful and smooth motion.
 
+### [Live Demo](https://stackblitz.com/edit/withastro-astro-hjhuav?file=src%2Fpages%2Findex.astro)
+
 ## Instalation
 > using npm
 ```
