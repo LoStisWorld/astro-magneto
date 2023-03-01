@@ -31,7 +31,7 @@ If Visual Studio Code is your preferred IDE, simply press CRTL+SPACE / CMD+SPACE
 | threshold          | options   | number | 0.5 | IntersectionObserver threshold option  |
 | duration           | transition | string | 250ms | Element speed to base position  |
 | timing             | transition | string | ease  | Transition timing function  |
-| delay              | transition | string | 0s  | Transition timing function  |
+| delay              | transition | string | 0s  | This specifies the duration to wait before the element goes back to the base position |
 
 
 ## How to use
